@@ -3,6 +3,15 @@ import java.util.HashMap;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Title: School.java
+ * Abstract: This class is the name class with all the function of this project. This class stores the data of my school.
+ * Keeps the data in 3 different hashmaps.
+ * Name: Pernille Dahl
+ * Date: 2018-Oct-130
+ */
+
+
 public class School {
 
     private String schoolName;
@@ -11,180 +20,339 @@ public class School {
         this.schoolName = name;
     }
 
-    private HashMap<Integer, Instructor> instructor  = new HashMap<>();
-    private HashMap<Integer, Student> students = new HashMap<>();
-    private HashMap<Integer, Course> courses = new HashMap<>();
+    private HashMap<Integer, Instructor> instructorMap = new HashMap<>();
+    private HashMap<Integer, Student> studentsMap = new HashMap<>();
+    private HashMap<Integer, Course> coursesMap = new HashMap<>();
 
+    public HashMap<Integer, Instructor> getInstructorMap() {
+        return instructorMap;
+    }
 
+    public HashMap<Integer, Student> getStudentsMap() {
+        return studentsMap;
+    }
+
+    public HashMap<Integer, Course> getCoursesMap() {
+        return coursesMap;
+    }
+
+    /**
+     *  Reading a text file of data. Throws a exception is file not found.
+     * @param filePath
+     * @throws FileNotFoundException
+     */
     public void readData(String filePath) throws FileNotFoundException {
         Scanner s = new Scanner(new File(filePath));
-        int numIns = s.nextInt();
+        int numInstructor = s.nextInt();
         s.nextLine();
-        for(int i = 0; i < numIns;i++){
+        for(int i = 0; i < numInstructor;i++){
             String instructorInfo = s.nextLine();
-            String[] listOfInstrcutor = instructorInfo.split(",", -1);
-            addInstructor(Integer.parseInt(listOfInstrcutor[0]), listOfInstrcutor[1], listOfInstrcutor[2], listOfInstrcutor[3]);
+            String[] listOfInstructor = instructorInfo.split(",");
+            addInstructor(Integer.parseInt(listOfInstructor[0]), listOfInstructor[1], listOfInstructor[2], listOfInstructor[3]);
         }
-        int numCor = s.nextInt();
+        int numCourse = s.nextInt();
         s.nextLine();
-        for(int i = 0; i < numCor;i++){
+        for(int i = 0; i < numCourse;i++){
             String CourseInfo = s.nextLine();
-            String[] listOfCourse = CourseInfo.split(",", -1);
+            String[] listOfCourse = CourseInfo.split(",");
             addCourse(Integer.parseInt(listOfCourse[0]), listOfCourse[1], Integer.parseInt(listOfCourse[2]), listOfCourse[3]);
         }
         int numStudent = s.nextInt();
         s.nextLine();
         for(int i = 0; i < numStudent;i++){
-            String Studentinfo = s.nextLine();
-            String[] listOfStudent = Studentinfo.split(",", -1);
+            String studentInfo = s.nextLine();
+            String[] listOfStudent = studentInfo.split(",");
             addStudent(Integer.parseInt(listOfStudent[0]), listOfStudent[1]);
         }
         s.close();
         System.out.println("Done.");
-//        readInfoMessage();
     }
 
-//    public void readInfoMessage(){
-//        if(instructor.get( employeeNumber ).equals(employeeNumber)){
-//            System.out.println("Instructor info reading failed – Employee number" + employeeNumber + " already used.");
-//        }
-//        if(students.get(studentID).equals( studentID )){
-//            System.out.println("Student info reading failed – Student ID " + studentID + " already used.");
-//        }
-//        System.out.println("Done.");
-//    }
-
+    /**
+     * Print the school information obtained in the toString function
+     */
     public void schoolInfo() {
-        System.out.println("School Name: " + schoolName);
-        System.out.println("Instructor Information \n");
-        System.out.println(instructor.toString());
-        System.out.println("Course Information \n");
-        System.out.println(courses.toString());
-        System.out.println("Student Information \n");
-        System.out.println(students.toString());
+        System.out.println( this.toString() );
     }
 
-    public boolean searchByEmail(String email) {
-        if ( instructor.containsValue(email) && email != null) { // never go inside
-            System.out.println( "Search Key: " + email );
-            System.out.println( "Employee Number: " + instructor.get( email ).getEmployeeNum() );
-            System.out.println( "\tName: " + instructor.get( email ).getName() + "\n Phone: " + instructor.get( email ).getPhoneNumber() );
+    /**
+     * Builds the string for schoolInfo and return its.
+     * @return
+     */
+
+    @Override
+    public String toString() {
+        StringBuilder schoolInfo = new StringBuilder();
+        schoolInfo.append( String.format( "School Name: %s.\n", schoolName ) );
+        schoolInfo.append("Instructor Information\n");
+        for ( Instructor instructor : instructorMap.values() ) {
+            schoolInfo.append( instructor.getName()+ "\n" );
+        }
+        schoolInfo.append("Course Information\n");
+        for ( Course course : coursesMap.values() ) {
+            schoolInfo.append(course.toString());
+        }
+        schoolInfo.append("Student Information\n");
+        for ( Student student : studentsMap.values() ) {
+            schoolInfo.append(student.toString());
+        }
+        return schoolInfo.toString();
+    }
+
+    /**
+     * Get the email, search and checks if the email is in the instructor map or not, if it is, it returns the instructor
+     * @param email
+     * @return
+     */
+    public Instructor searchByEmail(String email) {
+        for ( Instructor instructor : instructorMap.values() ) {
+            if ( instructor.getEmail().equals( email ) ) {
+                System.out.println( "Search Key: " + email );
+                System.out.println( "Employee Number: " + instructor.getEmployeeNum() );
+                System.out.println( "\tName: " + instructor.getName() + "\n Phone: " + instructor.getPhoneNumber() );
+                return instructor;
+            }
+        }
+        System.out.println( "Search Key: " + email );
+        System.out.println( "No employee with email " + email );
+        return null;
+    }
+
+    /**
+     * Adds the instructor to the instructor Map
+     * @param employeeNumber
+     * @param name
+     * @param email
+     * @param phoneNumber
+     * @return
+     */
+    public boolean addInstructor(int employeeNumber, String name, String email, String phoneNumber) {
+        if ( !instructorMap.containsKey( employeeNumber ) ) {
+            Instructor instructorInfo = new Instructor( employeeNumber, name, email, phoneNumber );
+            instructorMap.put( employeeNumber, instructorInfo );
             return true;
         } else {
-            System.out.println( "Search Key: " + email );
-            System.out.println( "No employee with email " + email );
+            System.out.printf( "Instructor addition failed - Instructor id %d already exists.\n", employeeNumber );
             return false;
         }
     }
 
-    public void addInstructor(int employeeNumber, String name, String email, String phonenumber) {
-        if(!instructor.containsKey( employeeNumber )){
-            Instructor instructorInfo = new Instructor( employeeNumber, name, email, phonenumber );
-            instructor.put( employeeNumber,instructorInfo );
-        }
-    }
-
-    public void addCourse(int courseId, String courseName, int capacity, String location) {
-        if(!courses.containsKey( courseId )){
+    /**
+     * Adds the course to the course Map
+     * @param courseId
+     * @param courseName
+     * @param capacity
+     * @param location
+     * @return
+     */
+    public boolean addCourse(int courseId, String courseName, int capacity, String location) {
+        if(!coursesMap.containsKey( courseId )){
             Course courseInfo = new Course( courseId, courseName, capacity, location );
-            courses.put( courseId, courseInfo );
+            coursesMap.put( courseId, courseInfo );
+            return true;
         }else {
-            System.out.println("Course addition failed - Course number " + courseId + " already used.");
-        }
-    }
-    public void addStudent(int studentId, String name) {
-        if(!students.containsKey( studentId )){
-            Student studentInfo = new Student( studentId, name);
-            students.put( studentId, studentInfo );
+            System.out.printf("Course addition failed - Course number %d already used.\n", courseId);
+            return false;
         }
     }
 
-    public void assignInstructor(int courseId, int employeeNumber) {
-        if(!instructor.containsKey( employeeNumber )){
+    /**
+     * Adds the student to the student Map
+     * @param studentId
+     * @param name
+     * @return
+     */
+    public boolean addStudent(int studentId, String name) {
+        if ( !studentsMap.containsKey( studentId ) ) {
+            Student studentInfo = new Student( studentId, name );
+            studentsMap.put( studentId, studentInfo );
+            return true;
+        } else {
+            System.out.printf("Student addition failed - Student id %d already used.\n", studentId);
+            return false;
+        }
+    }
+
+    /**
+     * Assign instructor to the course
+     * @param courseId
+     * @param employeeNumber
+     * @return
+     */
+    public boolean assignInstructor(int courseId, int employeeNumber) {
+        if(!instructorMap.containsKey( employeeNumber )){
             System.out.println("Instructor " + employeeNumber + " does not exist.");
+            return false;
         }
-// TODO: assign ins to the course map?? and link course and instructor
-//        courses.get( courseId ).setInstructorName( instructor.get( employeeNumber ).getName());
+        if ( !coursesMap.containsKey( courseId ) ) {
+            System.out.println("Course " + courseId + " does not exist.");
+            return false;
+        }
+        Course course = coursesMap.get( courseId );
+        course.setInstructor( instructorMap.get( employeeNumber ) );
+        Instructor instructor = instructorMap.get( employeeNumber );
+        instructor.getCourses().add( course );
+        return true;
     }
 
-    public void register(int courseId, int studentID) {
-        if(!students.containsKey( studentID )){
-            System.out.println("Student " + studentID + " does not exist.");
+    /**
+     * Assign/register the student to the course.
+     * @param courseId
+     * @param studentId
+     * @return
+     */
+    public boolean register(int courseId, int studentId) {
+        if(!studentsMap.containsKey( studentId )){
+            System.out.println("Student " + studentId + " does not exist.");
+            return false;
         }
-        courses.get( courseId ).setCurrentEnrollment(+1);
-        // if the student ID is not in the course info the that course you know it is not in the class
-
+        if(!coursesMap.containsKey( courseId )){
+            System.out.println("Course " + courseId + " does not exist.");
+            return false;
+        }
+        Course course = coursesMap.get( courseId );
+        if ( course.getEnrolledStudents().size() >= course.getMaxCapacity() ) {
+            System.out.println("Registration failed - Class is full.\n");
+            return false;
+        }
+        course.getEnrolledStudents().add( studentsMap.get( studentId ) );
+        Student student = studentsMap.get( studentId );
+        student.getCourses().add( course );
+        return true;
     }
 
-    public void putScore(int courseId, int studentID, double score) {
-        if(students.containsKey( studentID ) && (courses.containsKey( courseId )) && studentID == courseId){
-            courses.get( courseId ).setStudentScore( score );
+    /**
+     * Adding a score for a student in a class (course)
+     * @param courseId
+     * @param studentId
+     * @param score
+     */
+    public boolean putScore(int courseId, int studentId, double score) {
+        if(!studentsMap.containsKey( studentId )){
+            System.out.println("Student " + studentId + " does not exist.");
+            return false;
         }
-        if(!courses.get( courseId ).equals( studentID )){ // TODO: Fix, print also in the read section! does not what I want
-            System.out.println("Student " + studentID + " is not enrolled in " + courseId + ".");
+        if(!coursesMap.containsKey( courseId )){
+            System.out.println("Course " + courseId + " does not exist.");
+            return false;
         }
-        // TODO: assign student to the course map?? add score ??
-//        courses.get( courseId ).setStudentScore( score );
-
+        Course course = coursesMap.get( courseId );
+        if ( !course.isRegistered( studentId ) ) {
+            System.out.printf( "Student %d is not registered for the course.\n", studentId );
+            return false;
+        }
+        return course.putScore( studentsMap.get( studentId ), score );
     }
 
-    public void unRegister(int courseID, int studentID) {
-
-
+    /**
+     * unregisters a student from a course
+     * @param courseId
+     * @param studentId
+     */
+    public void unRegister(int courseId, int studentId) {
+        if(!studentsMap.containsKey( studentId )){
+            System.out.println("Student " + studentId + " does not exist.");
+        }
+        if(!coursesMap.containsKey( courseId )){
+            System.out.println("Course " + courseId + " does not exist.");
+        }
+        Course course = coursesMap.get( courseId );
+        course.unRegister( studentId );
     }
 
-    // detailed course information
+    /**
+     * Deletes the information of the course
+     * @param courseId
+     */
     public void courseInfo(int courseId) {
+        if ( !coursesMap.containsKey( courseId ) ) {
+            System.out.printf( "Course with id %d does not exist.\n", courseId );
+        }
+        Course course = coursesMap.get( courseId );
         System.out.println("Course Number: " + courseId);
-        System.out.println("Instructor: " + courses.get( courseId ).getInstructorName()); // TODO: name is null, fix
-        System.out.println("Course Title: " + courses.get( courseId ).getCourseTitle());
-        System.out.println("Room: " + courses.get( courseId ).getLocation());
-        System.out.println("Total Enrolled: " + courses.get( courseId ).getCurrentEnrollment());
-        System.out.println("Course Average: " + courses.get( courseId ).getStudentScore());
+        System.out.println("Instructor: " + course.getInstructor().getName());
+        System.out.println("Course Title: " + course.getCourseTitle());
+        System.out.println("Room: " + course.getLocation());
+        System.out.println("Total Enrolled: " + course.getEnrolledStudents().size());
+        System.out.println("Course Average: " + course.getAverage());
     }
 
+    /**
+     * Gets the information about the course
+     * @param courseId
+     * @return
+     */
     public Course getCourse(int courseId) {
-        Course getCourses = courses.get( courseId );
-        if(!getCourses.equals( courseId )) return null;
-        return getCourses;
-
+        if ( coursesMap.containsKey( courseId ) ) {
+            return coursesMap.get( courseId );
+        }
+        return null;
     }
-    // should not delete the course if students are enrolled in the course.
-    public void deleteCourse(int courseId) {
-        if( courses.get( courseId ).getCurrentEnrollment() <= 0 ){
-            courses.remove( courseId );
 
-        }else {
+    /**
+     * Deletes the course, and cheack so it should not delete the course if studentsMap are enrolled in the course.
+     * @param courseId
+     * @return
+     */
+    public boolean deleteCourse(int courseId) {
+        if ( !coursesMap.containsKey( courseId ) ) {
+            System.out.printf( "Course with id %d does not exist.\n", courseId );
+            return false;
+        }
+        if ( coursesMap.get( courseId ).getEnrolledStudents().size() > 0 ) {
             System.out.println("Course deletion failed – Enrolled student(s) in the class");
+            return false;
+        }
+        return coursesMap.remove( courseId ) != null;
+    }
+
+    /**
+     * Print the course information about all of the relevant courses
+     */
+    public void courseInfo() {
+        System.out.println("Number of Courses: " + coursesMap.size());
+        for ( Course course : coursesMap.values() ) {
+            System.out.printf( "%d : %d enrolled\n", course.getCourseNum(), course.getEnrolledStudents().size() );
         }
     }
 
-    public void courseInfo() {
-        System.out.println("Number of Courses: " + courses.size());
-//        for(Integer i : courses.keySet()){
-//            System.out.println(i + ": " +  ) ));
-//        }
-//        System.out.println(courses.getCourseNum + ":" + courses.getCurrentEnrollment + " enrolled");
-//        System.out.println(courses.toString());
-
+    /**
+     * Get the instructor, and checks if the instructor exist or not.
+     * @param courseId
+     * @return
+     */
+    public Instructor getInstructor(int courseId) {
+        if ( coursesMap.containsKey( courseId) ) {
+            Instructor instructor = coursesMap.get( courseId ).getInstructor();
+            return instructor;
+        }
+        System.out.printf( "Course with id %d does not exist.\n", courseId );
+        return null;
     }
-    public Instructor getInstructor(int employeeNumber) {
-        Instructor getIns = instructor.get( employeeNumber );
-        if(!getIns.equals( employeeNumber )) return null;
-        return getIns;
-    }
 
+    /**
+     * Get the student, and checks if the student exist or not.
+     * @param studentId
+     * @return
+     */
     public Student getStudent(int studentId) {
-        Student getS = students.get( studentId );
-        if(!getS.equals( studentId )) return null;
-        return getS;
+        if ( studentsMap.containsKey( studentId ) ) {
+            return studentsMap.get( studentId );
+        }
+        return null;
     }
-    // should drop all of the coursed the student is enrolled in.
-    public void graduateStudent(int studentId) {
 
-    }
-    @Override
-    public String toString(){
-        return "School Name: " + schoolName;
+    /**
+     * Checks if the student is in the school data, and because this student graduated it will remove the student information
+     * @param studentId
+     */
+    public void graduateStudent(int studentId) {
+        if ( studentsMap.containsKey( studentId ) ) {
+            Student student = studentsMap.get( studentId );
+            for ( Course course : student.getCourses() ) {
+                course.unRegister( studentId ); // just in case, requirement is not clear
+            }
+            studentsMap.remove( studentId );
+        }
     }
 }

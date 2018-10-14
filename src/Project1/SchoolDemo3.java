@@ -9,7 +9,7 @@ public class SchoolDemo3 {
         Student student1;
 
         System.out.println("===== Read Data ===== ");
-        SCD.readData("/Users/pernilledahl/Desktop/cst338Folder/cst338/src/Project1/Project1.test/test1.txt");
+        SCD.readData("/Users/pernilledahl/Desktop/cst338Folder/cst338/src/Project1/tmp/test1.txt");
 
         SCD.assignInstructor( 306, 200 );
         SCD.assignInstructor( 205, 200 );
@@ -21,7 +21,7 @@ public class SchoolDemo3 {
         SCD.register( 306, 7777 );
         SCD.register( 205, 8888 );
         SCD.putScore( 205, 5555, 50.0 );
-        SCD.putScore( 205, 7777, 1000.0 );
+        SCD.putScore( 205, 7777, 100.0 );
         SCD.putScore( 306, 7777, 100.0 );
         SCD.putScore( 205, 8888, 50.0 );
 
@@ -33,7 +33,7 @@ public class SchoolDemo3 {
         SCD.courseInfo( 205 );
 
         instructor1 = SCD.getInstructor(205);
-        System.out.println( "\n ==== Detailed Instrcutor Info ====" );
+        System.out.println( "\n ==== Detailed Instructor Info ====" );
         System.out.println( instructor1 );
 
         student1 = SCD.getStudent(7777);

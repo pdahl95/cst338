@@ -8,7 +8,7 @@ public class SchoolDemo2 {
         Course course1;
 
         System.out.println("==== Read Data ====");
-        SCD.readData( "/Users/pernilledahl/Desktop/cst338Folder/cst338/src/Project1/Project1.test/test1.txt" );
+        SCD.readData( "/Users/pernilledahl/Desktop/cst338Folder/cst338/src/Project1/tmp/test1.txt" );
 
         SCD.addInstructor( 700, "E. Tao", "tao@csumb.edu", "777-777-1234" );
         SCD.addCourse(300, "CST300 - ProSem", 70, "BIT 110");
@@ -31,7 +31,7 @@ public class SchoolDemo2 {
         SCD.courseInfo(306);
 
         course1 = SCD.getCourse(205);
-//        course1.updateLocation( "Library 104" );// error
+        course1.updateLocation( "Library 104" );
         System.out.println( "\n==== Detailed Course Info 2 ====" );
         SCD.courseInfo( 205 );
 
