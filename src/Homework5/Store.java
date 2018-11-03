@@ -1,4 +1,11 @@
 package Homework5;
+/**
+ * Title: Store.java
+ * Abstract: The main functional file. The actual store, where it adds customer, add and deletes products, get customer and product information.
+ * Make the order.
+ * Name: Pernille Dahl
+ * Date: 2018-Nov-2
+ */
 
 import java.util.ArrayList;
 import java.util.Scanner;

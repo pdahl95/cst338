@@ -1,4 +1,10 @@
 package Homework5;
+/**
+ * Title: Product.java
+ * Abstract: Product file to access and get the name of the product, the price and the id attach to each product.
+ * Name: Pernille Dahl
+ * Date: 2018-Nov-2
+ */
 
 public class Product {
 

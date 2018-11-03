@@ -1,4 +1,10 @@
 package Homework5;
+/**
+ * Title: Customer.java
+ * Abstract: Customer file to access and get the name of the customer, and the id attach to each customer.
+ * Name: Pernille Dahl
+ * Date: 2018-Nov-2
+ */
 
 public class Customer {
 
