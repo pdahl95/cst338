@@ -113,7 +113,13 @@ public class Store {
                 }
             } else {
                 int productNumber= Integer.parseInt(entryKey);
-                System.out.println("No: " + productNumber + " - " + products.get( productNumber ).getProductName() + ", Price: " + products.get( productNumber ).getPrice());
+                if(products.containsKey( productNumber )){
+                    System.out.println("No: " + productNumber + " - " + products.get( productNumber ).getProductName() + ", Price: " + products.get( productNumber ).getPrice());
+
+                } else {
+                    System.out.println("Product does not exist.");
+                    productNumber= Integer.parseInt(entryKey);
+                }
             }
         }
     }
