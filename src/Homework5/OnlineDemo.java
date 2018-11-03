@@ -1,7 +1,7 @@
 package Homework5;
 /**
  * Title: OnlineDemo.java
- * Abstract:
+ * Abstract: Demo to run the Online Store Program.
  * Name: Pernille Dahl
  * Date: 2018-Nov-2
  */
